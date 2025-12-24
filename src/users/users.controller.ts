@@ -57,19 +57,6 @@ export class UsersController {
     }
   }
 
-  @Post()
-  loginController(@Body() user: LoginDTO) {
-    try {
-      const res = this.usersService.loginService(user);
-      return res;
-    } catch (error) {
-      throw new HttpException(
-        'Server Error',
-        error?.message || HttpStatus?.BAD_REQUEST,
-      );
-    }
-  }
-
   @Patch(':id')
   updateUserController(@Param('id') id: string, @Body() user: UpdateUserDTO) {
     try {

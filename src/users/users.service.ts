@@ -1,22 +1,23 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { SignUpDTO } from './dto/signup-dto';
 import { UpdateUserDTO } from './dto/update-user-dto';
 import { LoginDTO } from './dto/login-dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
-import { hashPassword, matchPassword } from 'src/utils/passwordUtils';
-import { JwtService } from '@nestjs/jwt';
+import { hashPassword } from 'src/utils/passwordUtils';
 
 @Injectable()
 export class UsersService {
+  findOneBy: any;
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private jwtService: JwtService,
+    // private jwtService: JwtService,
   ) {}
-  getAllUsersService() {
-    return [];
+  async getAllUsersService() {
+    const res = await this.usersRepository?.find();
+    return res;
   }
 
   getSingleUserService(id: string) {
@@ -26,30 +27,13 @@ export class UsersService {
   async signUpService(user: SignUpDTO) {
     const hashedPassword = await hashPassword(user?.password);
 
-    console.log('hashed', hashedPassword);
-
     const newUser = this.usersRepository.create({
       ...user,
       password: hashedPassword,
     });
 
     const res = await this.usersRepository.save(newUser);
-
-    console.log('signup', res);
     return res;
-  }
-
-  async loginService(user: LoginDTO) {
-    const email = user?.email;
-    const singleUser = await this.usersRepository?.findOne(email);
-
-    console.log('singleUser', singleUser);
-
-    const matched = await matchPassword(user?.password);
-
-    if (!matched) {
-      throw new UnauthorizedException('Password is wrong');
-    }
   }
 
   updateUserService(id: string, user: UpdateUserDTO) {
