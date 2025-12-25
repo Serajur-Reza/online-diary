@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SignUpDTO } from './dto/signup-dto';
 import { UpdateUserDTO } from './dto/update-user-dto';
-import { LoginDTO } from './dto/login-dto';
+import { LoginDTO } from '../auth/dto/login-dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
@@ -36,7 +36,8 @@ export class UsersService {
     return res;
   }
 
-  updateUserService(id: string, user: UpdateUserDTO) {
+  updateUserService(id: number, user: UpdateUserDTO) {
+    console.log('user update', id, user);
     return '';
   }
 
