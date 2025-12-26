@@ -9,10 +9,10 @@ import {
   Patch,
   Post,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { RecordsService } from './records.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { UpdateUserDTO } from 'src/users/dto/update-user-dto';
 import { CreateRecordDTO } from './dto/create-record-dto';
 import { UpdateRecordDTO } from './dto/update-record-dto';
 
@@ -50,9 +50,13 @@ export class RecordsController {
 
   @UseGuards(AuthGuard)
   @Post()
-  async createRecordController(@Body() record: CreateRecordDTO) {
+  async createRecordController(
+    @Request() req,
+    @Body() record: CreateRecordDTO,
+  ) {
     try {
-      const res = await this.recordsService.createRecordService(record);
+      const userId = req?.user?.id;
+      const res = await this.recordsService.createRecordService(userId, record);
       return res;
     } catch (error) {
       throw new HttpException(

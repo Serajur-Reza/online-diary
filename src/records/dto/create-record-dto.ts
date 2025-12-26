@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateRecordDTO {
   @IsString()
@@ -11,6 +11,6 @@ export class CreateRecordDTO {
 
   @IsString()
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   readonly date: string;
 }

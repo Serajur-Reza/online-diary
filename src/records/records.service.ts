@@ -22,8 +22,13 @@ export class RecordsService {
     return res;
   }
 
-  async createRecordService(record: CreateRecordDTO) {
-    const res = await this.usersRepository?.save(record);
+  async createRecordService(userId: number, record: CreateRecordDTO) {
+    console.log('create record', record);
+    const newRecord = this.usersRepository.create({
+      ...record,
+      // user: userId,
+    });
+    const res = await this.usersRepository?.save(newRecord);
     return res;
   }
 
