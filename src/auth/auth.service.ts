@@ -8,6 +8,7 @@ import { User } from 'src/users/users.entity';
 import { Repository } from 'typeorm';
 import { ChangePasswordDTO } from './dto/change-password';
 import { hashPassword } from 'src/utils/passwordUtils';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,7 @@ export class AuthService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async loginService(body: LoginDTO) {
@@ -25,9 +27,22 @@ export class AuthService {
     const isMatch = await bcrypt.compare(body?.password, user?.password);
     if (!isMatch) throw new UnauthorizedException();
 
+    // const accessExpiresIn =
+    //    ?? '30m';
+
     const payload = { ...user };
+    const accessToken = await this.jwtService.signAsync(payload, {
+      secret: 'jgvklanaiovnrioa',
+      expiresIn: '30m',
+    });
+
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      secret: 'gaioeanvkapranoa',
+      expiresIn: '30m',
+    });
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: accessToken,
+      refresh_token: refreshToken,
     };
   }
 

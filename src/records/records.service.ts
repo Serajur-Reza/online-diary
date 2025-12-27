@@ -12,23 +12,25 @@ export class RecordsService {
     private usersRepository: Repository<Record>,
   ) {}
 
-  async getAllRecordsService() {
-    const res = await this.usersRepository?.find();
+  async getAllRecordsService(userId: number) {
+    const res = await this.usersRepository?.findBy({ userId });
     return res;
   }
 
-  async getSingleRecordService(id: number) {
-    const res = await this.usersRepository?.findOneBy({ id });
+  async getSingleRecordService(userId: number, id: number) {
+    const res = await this.usersRepository?.findOneBy({ userId, id });
+
+    if (!res) {
+      throw new Error('Record not found');
+    }
     return res;
   }
 
   async createRecordService(userId: number, record: CreateRecordDTO) {
-    console.log('create record', record);
-    const newRecord = this.usersRepository.create({
+    const res = await this.usersRepository?.save({
       ...record,
-      // user: userId,
+      userId: userId,
     });
-    const res = await this.usersRepository?.save(newRecord);
     return res;
   }
 

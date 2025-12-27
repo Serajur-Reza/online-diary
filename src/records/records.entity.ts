@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity('records')
@@ -22,16 +23,17 @@ export class Record {
   @Column({ type: 'date' }) // Stores only the date (YYYY-MM-DD)
   date: string;
 
-  //   @Column({ type: 'time' }) // Stores only the time (HH:mm:ss)
-  //   time: string;
-
-  // Relationship: Many diary records belong to one User
-  @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
-  user: User;
+  @Column()
+  userId: number;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // Relationship: Many diary records belong to one User
+  @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  user: User;
 }

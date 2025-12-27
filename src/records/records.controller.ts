@@ -22,9 +22,10 @@ export class RecordsController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async getAllRecordsController() {
+  async getAllRecordsController(@Request() req) {
     try {
-      const res = await this.recordsService.getAllRecordsService();
+      const userId: number = req?.user?.id as number;
+      const res = await this.recordsService.getAllRecordsService(userId);
       return res;
     } catch (error) {
       throw new HttpException(
@@ -36,9 +37,10 @@ export class RecordsController {
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  async getSingleRecordController(@Param('id') id: number) {
+  async getSingleRecordController(@Request() req, @Param('id') id: number) {
     try {
-      const res = await this.recordsService.getSingleRecordService(id);
+      const userId: number = req?.user?.id as number;
+      const res = await this.recordsService.getSingleRecordService(userId, id);
       return res;
     } catch (error) {
       throw new HttpException(
@@ -55,7 +57,7 @@ export class RecordsController {
     @Body() record: CreateRecordDTO,
   ) {
     try {
-      const userId = req?.user?.id;
+      const userId: number = req?.user?.id as number;
       const res = await this.recordsService.createRecordService(userId, record);
       return res;
     } catch (error) {

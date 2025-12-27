@@ -12,7 +12,7 @@ import { RecordsModule } from './records/records.module';
     UsersModule,
     AuthModule,
     ConfigModule.forRoot({
-      isGlobal: true, // Makes the ConfigService available everywhere
+      isGlobal: true, // This fixes the UndefinedDependencyException globally
     }),
 
     TypeOrmModule.forRootAsync({
