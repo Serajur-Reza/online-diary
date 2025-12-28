@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { ChangePasswordDTO } from './dto/change-password';
 import { hashPassword } from 'src/utils/passwordUtils';
 import { ConfigService } from '@nestjs/config';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -27,18 +28,20 @@ export class AuthService {
     const isMatch = await bcrypt.compare(body?.password, user?.password);
     if (!isMatch) throw new UnauthorizedException();
 
-    // const accessExpiresIn =
-    //    ?? '30m';
+    // console.log(
+    //   this.configService.get('JWT_ACCESS_SECRET_KEY'),
+    //   this.configService.get('JWT_REFRESH_SECRET_KEY'),
+    // );
 
     const payload = { ...user };
     const accessToken = await this.jwtService.signAsync(payload, {
-      secret: 'jgvklanaiovnrioa',
-      expiresIn: '30m',
+      secret: this.configService.get('JWT_ACCESS_SECRET_KEY'),
+      expiresIn: this.configService.get('JWT_ACCESS_VALIDITY'),
     });
 
     const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: 'gaioeanvkapranoa',
-      expiresIn: '30m',
+      secret: this.configService.get('JWT_REFRESH_SECRET_KEY'),
+      expiresIn: this.configService.get('JWT_REFRESH_VALIDITY'),
     });
     return {
       access_token: accessToken,
@@ -68,5 +71,36 @@ export class AuthService {
     return {
       message: 'Password Changed Successfully',
     };
+  }
+
+  async refreshTokenService(request: Request) {
+    try {
+      // console.log('refresh req', request.headers.cookie?.split('=')[1]);
+
+      const refreshToken = request.headers.cookie?.split('=')[1];
+
+      const refreshPayload = await this.jwtService.verifyAsync(
+        refreshToken as string,
+        {
+          secret: this.configService.get('JWT_REFRESH_SECRET_KEY'), // In production, use ConfigService
+        },
+      );
+
+      const [type, token] = request.headers.authorization?.split(' ') ?? [];
+
+      const payload = this.jwtService.decode(token as string);
+
+      const { iat, exp, nbf, ...cleanPayload } = payload;
+      const accessToken = await this.jwtService.signAsync(cleanPayload, {
+        secret: this.configService.get('JWT_ACCESS_SECRET_KEY'),
+        expiresIn: this.configService.get('JWT_ACCESS_VALIDITY'),
+      });
+
+      return {
+        access_token: accessToken,
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Your Refresh Token Has Expired');
+    }
   }
 }

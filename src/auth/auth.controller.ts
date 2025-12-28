@@ -1,17 +1,8 @@
 // src/auth/auth.controller.ts
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  UseGuards,
-  Request,
-  Patch,
-} from '@nestjs/common';
+import { Body, Controller, Post, Patch, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
-// import { AuthGuard } from './auth.guard';
+
 import { LoginDTO } from 'src/auth/dto/login-dto';
-import { AuthGuard } from './auth.guard';
 import { ChangePasswordDTO } from './dto/change-password';
 
 @Controller('auth')
@@ -31,8 +22,12 @@ export class AuthController {
 
   // @UseGuards(AuthGuard) // Protect this specific route
   @Patch('change-password')
-  changePasswordController(@Request() req, @Body() body: ChangePasswordDTO) {
-    console.log('change password', body);
+  changePasswordController(@Body() body: ChangePasswordDTO) {
     return this.authService.changePasswordService(body);
+  }
+
+  @Post('refresh-token')
+  refreshTokenController(@Request() req) {
+    return this.authService.refreshTokenService(req);
   }
 }
