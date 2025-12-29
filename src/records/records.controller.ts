@@ -22,80 +22,37 @@ export class RecordsController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async getAllRecordsController(@Request() req) {
-    try {
-      const userId: number = req?.user?.id as number;
-      const res = await this.recordsService.getAllRecordsService(userId);
-      return res;
-    } catch (error) {
-      throw new HttpException(
-        'Server Error',
-        error?.message || HttpStatus?.BAD_REQUEST,
-      );
-    }
+  getAllRecordsController(@Request() req) {
+    const userId: number = req?.user?.id as number;
+    return this.recordsService.getAllRecordsService(userId);
   }
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  async getSingleRecordController(@Request() req, @Param('id') id: number) {
-    try {
-      const userId: number = req?.user?.id as number;
-      const res = await this.recordsService.getSingleRecordService(userId, id);
-      return res;
-    } catch (error) {
-      throw new HttpException(
-        'Server Error',
-        error?.message || HttpStatus?.BAD_REQUEST,
-      );
-    }
+  getSingleRecordController(@Request() req, @Param('id') id: number) {
+    const userId: number = req?.user?.id as number;
+    return this.recordsService.getSingleRecordService(userId, id);
   }
 
   @UseGuards(AuthGuard)
   @Post()
-  async createRecordController(
-    @Request() req,
-    @Body() record: CreateRecordDTO,
-  ) {
-    try {
-      const userId: number = req?.user?.id as number;
-      const res = await this.recordsService.createRecordService(userId, record);
-      return res;
-    } catch (error) {
-      throw new HttpException(
-        'Server Error',
-        error?.message || HttpStatus?.BAD_REQUEST,
-      );
-    }
+  createRecordController(@Request() req, @Body() record: CreateRecordDTO) {
+    const userId: number = req?.user?.id as number;
+    return this.recordsService.createRecordService(userId, record);
   }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  async updateRecordController(
+  updateRecordController(
     @Param('id') id: number,
     @Body() record: UpdateRecordDTO,
   ) {
-    try {
-      const res = await this.recordsService.updateRecordService(id, record);
-      return res;
-    } catch (error) {
-      throw new HttpException(
-        'Server Error',
-        error?.message || HttpStatus?.BAD_REQUEST,
-      );
-    }
+    return this.recordsService.updateRecordService(id, record);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async deleteRecordController(@Param('id') id: number) {
-    try {
-      const res = await this.recordsService.deleteRecordService(id);
-      return res;
-    } catch (error) {
-      throw new HttpException(
-        'Server Error',
-        error?.message || HttpStatus?.BAD_REQUEST,
-      );
-    }
+  deleteRecordController(@Param('id') id: number) {
+    return this.recordsService.deleteRecordService(id);
   }
 }

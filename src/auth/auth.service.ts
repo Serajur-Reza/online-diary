@@ -1,5 +1,9 @@
 // src/auth/auth.service.ts
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -10,6 +14,8 @@ import { ChangePasswordDTO } from './dto/change-password';
 import { hashPassword } from 'src/utils/passwordUtils';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class AuthService {
@@ -21,12 +27,36 @@ export class AuthService {
   ) {}
 
   async loginService(body: LoginDTO) {
+    // if (!body?.email) {
+    //   throw new UnauthorizedException('Please enter your registered email');
+    // }
+
+    // if (!body?.password) {
+    //   throw new UnauthorizedException('Please enter your password');
+    // }
+
+    const dtoObject = plainToInstance(LoginDTO, body);
+
+    // Validate
+    const errors = await validate(dtoObject);
+
+    if (errors.length > 0) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        errors: errors.map((err) => {
+          return err?.constraints;
+        }),
+      });
+    }
+
     const user = await this.usersRepository.findOneBy({ email: body?.email });
 
-    if (!user) throw new UnauthorizedException();
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
 
     const isMatch = await bcrypt.compare(body?.password, user?.password);
-    if (!isMatch) throw new UnauthorizedException();
+    if (!isMatch) throw new UnauthorizedException('Password does not match');
 
     // console.log(
     //   this.configService.get('JWT_ACCESS_SECRET_KEY'),
@@ -50,9 +80,33 @@ export class AuthService {
   }
 
   async changePasswordService(body: ChangePasswordDTO) {
+    // if (!body?.email) {
+    //   throw new UnauthorizedException('Please enter your registered email');
+    // }
+
+    // if (!body?.password) {
+    //   throw new UnauthorizedException('Please enter your password');
+    // }
+
+    const dtoObject = plainToInstance(ChangePasswordDTO, body);
+
+    // Validate
+    const errors = await validate(dtoObject);
+
+    if (errors.length > 0) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        errors: errors.map((err) => {
+          return err?.constraints;
+        }),
+      });
+    }
+
     const user = await this.usersRepository.findOneBy({ email: body?.email });
 
-    if (!user) throw new UnauthorizedException();
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
 
     const hashedPassword = await hashPassword(body?.password);
 
@@ -65,8 +119,6 @@ export class AuthService {
       { id: user?.id },
       { password: hashedPassword },
     );
-
-    console.log(res);
 
     return {
       message: 'Password Changed Successfully',
@@ -100,7 +152,12 @@ export class AuthService {
         access_token: accessToken,
       };
     } catch (error) {
-      throw new UnauthorizedException('Your Refresh Token Has Expired');
+      if (error?.name === 'TokenExpiredError') {
+        throw new UnauthorizedException(
+          'Your refresh token has expired. Please log in.',
+        );
+      }
+      throw new UnauthorizedException(error?.message || 'Something went wrong');
     }
   }
 }

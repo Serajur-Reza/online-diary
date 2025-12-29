@@ -2,15 +2,14 @@ import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateRecordDTO {
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Title cannot be empty' })
   readonly title: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Description cannot be empty' })
   readonly description: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @IsDateString()
+  @IsNotEmpty({ message: 'Date cannot be empty' })
+  @IsDateString({}, { message: 'Date should be of this format yyyy-mm-dd' })
   readonly date: string;
 }

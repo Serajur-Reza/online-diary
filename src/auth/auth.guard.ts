@@ -88,9 +88,13 @@ export class AuthGuard implements CanActivate {
       // }
       // Attach the user payload to the request object
       request['user'] = payload;
-    } catch (e) {
-      console.log(e);
-      throw new UnauthorizedException(e?.message || 'Invalid or expired token');
+    } catch (error) {
+      if (error?.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Your session has expired.');
+      }
+      throw new UnauthorizedException(
+        error?.message || 'Invalid or expired token',
+      );
     }
     return true;
   }

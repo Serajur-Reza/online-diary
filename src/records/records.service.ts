@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Record } from './records.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateRecordDTO } from './dto/create-record-dto';
 import { UpdateRecordDTO } from './dto/update-record-dto';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class RecordsService {
@@ -27,6 +29,21 @@ export class RecordsService {
   }
 
   async createRecordService(userId: number, record: CreateRecordDTO) {
+    const dtoObject = plainToInstance(CreateRecordDTO, record);
+
+    // Validate
+    const errors = await validate(dtoObject);
+
+    console.log(errors);
+
+    if (errors.length > 0) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        errors: errors.map((err) => {
+          return err?.constraints;
+        }),
+      });
+    }
     const res = await this.usersRepository?.save({
       ...record,
       userId: userId,
@@ -35,12 +52,24 @@ export class RecordsService {
   }
 
   async updateRecordService(id: number, record: UpdateRecordDTO) {
-    const res = await this.usersRepository?.update(id, record);
-    return res;
+    const res = await this.usersRepository?.findOneBy({ id });
+
+    if (!res) {
+      throw new Error('Record not found');
+    }
+
+    const updatedRecord = await this.usersRepository?.update(id, record);
+    return updatedRecord;
   }
 
   async deleteRecordService(id: number) {
-    const res = await this.usersRepository?.delete(id);
-    return res;
+    const res = await this.usersRepository?.findOneBy({ id });
+
+    if (!res) {
+      throw new Error('Record not found');
+    }
+
+    const deletedRecord = await this.usersRepository?.delete(id);
+    return deletedRecord;
   }
 }
