@@ -23,43 +23,19 @@ export class UsersController {
 
   @Get()
   async getAllUsersController() {
-    try {
-      const res = this.usersService.getAllUsersService();
-      return res;
-    } catch (error) {
-      throw new HttpException(
-        'Server Error',
-        error?.message || HttpStatus?.BAD_REQUEST,
-      );
-    }
+    const res = await this.usersService.getAllUsersService();
+    return res;
   }
 
   @UseGuards(AuthGuard)
   @Get('me')
   getSingleUserController(@Request() req) {
-    try {
-      // const res = this.usersService.getSingleUserService(id);
-      // return res;
-      return req?.user;
-    } catch (error) {
-      throw new HttpException(
-        'Server Error',
-        error?.message || HttpStatus?.BAD_REQUEST,
-      );
-    }
+    return req?.user;
   }
 
   @Post()
   async signUpController(@Body() user: SignUpDTO) {
-    try {
-      const res = await this.usersService.signUpService(user);
-      return res;
-    } catch (error) {
-      throw new HttpException(
-        'Server Error',
-        error?.message || HttpStatus?.BAD_REQUEST,
-      );
-    }
+    return await this.usersService.signUpService(user);
   }
 
   // @UseGuards(AuthGuard)

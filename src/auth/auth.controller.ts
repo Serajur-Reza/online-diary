@@ -22,8 +22,8 @@ export class AuthController {
 
   // @UseGuards(AuthGuard) // Protect this specific route
   @Patch('change-password')
-  changePasswordController(@Body() body: ChangePasswordDTO) {
-    return this.authService.changePasswordService(body);
+  async changePasswordController(@Body() body: ChangePasswordDTO) {
+    return await this.authService.changePasswordService(body);
   }
 
   @Post('refresh-token')

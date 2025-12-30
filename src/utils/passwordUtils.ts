@@ -13,7 +13,6 @@ export const matchPassword = async (password: string) => {
 
   const hash = await bcrypt.hash(password, Number(saltOrRounds));
   const isMatch = await bcrypt.compare(password, hash);
-  console.log(isMatch);
 
   return isMatch;
 };

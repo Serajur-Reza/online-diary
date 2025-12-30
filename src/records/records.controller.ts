@@ -22,37 +22,40 @@ export class RecordsController {
 
   @UseGuards(AuthGuard)
   @Get()
-  getAllRecordsController(@Request() req) {
+  async getAllRecordsController(@Request() req) {
     const userId: number = req?.user?.id as number;
-    return this.recordsService.getAllRecordsService(userId);
+    return await this.recordsService.getAllRecordsService(userId);
   }
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  getSingleRecordController(@Request() req, @Param('id') id: number) {
+  async getSingleRecordController(@Request() req, @Param('id') id: number) {
     const userId: number = req?.user?.id as number;
-    return this.recordsService.getSingleRecordService(userId, id);
+    return await this.recordsService.getSingleRecordService(userId, id);
   }
 
   @UseGuards(AuthGuard)
   @Post()
-  createRecordController(@Request() req, @Body() record: CreateRecordDTO) {
+  async createRecordController(
+    @Request() req,
+    @Body() record: CreateRecordDTO,
+  ) {
     const userId: number = req?.user?.id as number;
-    return this.recordsService.createRecordService(userId, record);
+    await this.recordsService.createRecordService(userId, record);
   }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  updateRecordController(
+  async updateRecordController(
     @Param('id') id: number,
     @Body() record: UpdateRecordDTO,
   ) {
-    return this.recordsService.updateRecordService(id, record);
+    return await this.recordsService.updateRecordService(id, record);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  deleteRecordController(@Param('id') id: number) {
-    return this.recordsService.deleteRecordService(id);
+  async deleteRecordController(@Param('id') id: number) {
+    return await this.recordsService.deleteRecordService(id);
   }
 }

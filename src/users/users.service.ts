@@ -1,11 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { SignUpDTO } from './dto/signup-dto';
 import { UpdateUserDTO } from './dto/update-user-dto';
-import { LoginDTO } from '../auth/dto/login-dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
 import { hashPassword } from 'src/utils/passwordUtils';
+import { validate } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -20,11 +26,20 @@ export class UsersService {
     return res;
   }
 
-  getSingleUserService(id: string) {
-    return '';
-  }
-
   async signUpService(user: SignUpDTO) {
+    const dtoObject = plainToInstance(SignUpDTO, user);
+
+    // Validate
+    const errors = await validate(dtoObject);
+
+    if (errors.length > 0) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        errors: errors.map((err) => {
+          return err?.constraints;
+        }),
+      });
+    }
     const hashedPassword = await hashPassword(user?.password);
 
     const newUser = this.usersRepository.create({
@@ -36,12 +51,12 @@ export class UsersService {
     return res;
   }
 
-  updateUserService(id: number, user: UpdateUserDTO) {
-    console.log('user update', id, user);
-    return '';
-  }
+  // updateUserService(id: number, user: UpdateUserDTO) {
+  //   console.log('user update', id, user);
+  //   return '';
+  // }
 
-  deleteUserService(id: string) {
-    return '';
-  }
+  // deleteUserService(id: string) {
+  //   return '';
+  // }
 }
