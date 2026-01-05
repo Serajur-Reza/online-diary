@@ -27,7 +27,7 @@ export class AuthController {
   }
 
   @Post('refresh-token')
-  refreshTokenController(@Request() req) {
-    return this.authService.refreshTokenService(req);
+  async refreshTokenController(@Request() req) {
+    return await this.authService.refreshTokenService(req);
   }
 }

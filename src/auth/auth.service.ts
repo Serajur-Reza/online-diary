@@ -129,7 +129,9 @@ export class AuthService {
     try {
       // console.log('refresh req', request.headers.cookie?.split('=')[1]);
 
-      const refreshToken = request.headers.cookie?.split('=')[1];
+      const refreshToken = request.cookies['refreshToken'];
+
+      console.log('refeshTOken from service', refreshToken);
 
       const refreshPayload = await this.jwtService.verifyAsync(
         refreshToken as string,
@@ -138,9 +140,11 @@ export class AuthService {
         },
       );
 
-      const [type, token] = request.headers.authorization?.split(' ') ?? [];
+      // const [type, token] = request.headers.authorization?.split(' ') ?? [];
 
-      const payload = this.jwtService.decode(token as string);
+      const payload = this.jwtService.decode(refreshToken as string);
+
+      console.log('apyload service', payload);
 
       const { iat, exp, nbf, ...cleanPayload } = payload;
       const accessToken = await this.jwtService.signAsync(cleanPayload, {
