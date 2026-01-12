@@ -34,8 +34,6 @@ export class AuthGuard implements CanActivate {
         secret: this.configService.get('JWT_ACCESS_SECRET_KEY'), // In production, use ConfigService
       });
 
-      // console.log('erroorroe', payload);
-
       // const access =
       //   Number(this.configService.get('JWT_ACCESS_VALIDITY')?.slice(0, -1)) *
       //   60 *
@@ -63,20 +61,15 @@ export class AuthGuard implements CanActivate {
 
       // const current = Date.now();
 
-      // console.log('fdkalgfarkljfko');
-
       // if (current > expiryTime) {
-      //   // console.log('access token expired 1');
+
       //   // const { iat, exp, nbf, ...cleanPayload } = payload;
       //   // const accessToken = await this.jwtService.signAsync(cleanPayload, {
       //   //   secret: this.configService.get('JWT_ACCESS_SECRET_KEY'),
       //   //   expiresIn: this.configService.get('JWT_ACCESS_VALIDITY'),
       //   // });
 
-      //   // console.log('access token expired 2');
       //   // // request['headers']['authorization'] = `Bearer ${accessToken}`;
-
-      //   // // console.log('set new token', request['headers']['authorization']);
 
       //   // this.setAccessToken(request, accessToken);
       //   // // this.canActivate(context);

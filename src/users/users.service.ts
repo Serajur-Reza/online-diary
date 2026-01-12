@@ -1,11 +1,6 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignUpDTO } from './dto/signup-dto';
-import { UpdateUserDTO } from './dto/update-user-dto';
+
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
@@ -52,7 +47,7 @@ export class UsersService {
   }
 
   // updateUserService(id: number, user: UpdateUserDTO) {
-  //   console.log('user update', id, user);
+
   //   return '';
   // }
 

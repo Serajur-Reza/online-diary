@@ -1,4 +1,4 @@
-import { IsDate, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsOptional, IsString } from 'class-validator';
 
 export class UpdateRecordDTO {
   @IsString()
@@ -9,8 +9,7 @@ export class UpdateRecordDTO {
   @IsOptional()
   readonly description: string;
 
-  @IsString()
-  @IsDate()
+  @IsDateString({}, { message: 'Date should be of this format yyyy-mm-dd' })
   @IsOptional()
   readonly date: string;
 }

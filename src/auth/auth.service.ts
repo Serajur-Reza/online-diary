@@ -58,11 +58,6 @@ export class AuthService {
     const isMatch = await bcrypt.compare(body?.password, user?.password);
     if (!isMatch) throw new UnauthorizedException('Password does not match');
 
-    // console.log(
-    //   this.configService.get('JWT_ACCESS_SECRET_KEY'),
-    //   this.configService.get('JWT_REFRESH_SECRET_KEY'),
-    // );
-
     const payload = { ...user };
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: this.configService.get('JWT_ACCESS_SECRET_KEY'),
@@ -127,11 +122,7 @@ export class AuthService {
 
   async refreshTokenService(request: Request) {
     try {
-      // console.log('refresh req', request.headers.cookie?.split('=')[1]);
-
       const refreshToken = request.cookies['refreshToken'];
-
-      console.log('refeshTOken from service', refreshToken);
 
       const refreshPayload = await this.jwtService.verifyAsync(
         refreshToken as string,
@@ -143,8 +134,6 @@ export class AuthService {
       // const [type, token] = request.headers.authorization?.split(' ') ?? [];
 
       const payload = this.jwtService.decode(refreshToken as string);
-
-      console.log('apyload service', payload);
 
       const { iat, exp, nbf, ...cleanPayload } = payload;
       const accessToken = await this.jwtService.signAsync(cleanPayload, {
