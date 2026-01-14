@@ -1,3 +1,4 @@
+import { AiAnalysis } from 'src/ai-analysis/ai-analysis.entity';
 import { User } from 'src/users/users.entity';
 import {
   Entity,
@@ -19,6 +20,10 @@ export class Record {
 
   @Column({ type: 'text' }) // Use 'text' for long descriptions
   description: string;
+
+  // This merges the AiAnalysis columns into this table
+  @Column(() => AiAnalysis)
+  sentiment: AiAnalysis;
 
   @Column({ type: 'date' }) // Stores only the date (YYYY-MM-DD)
   date: string;
