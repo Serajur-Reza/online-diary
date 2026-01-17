@@ -3,13 +3,12 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Patch,
   Post,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { RecordsService } from './records.service';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -22,9 +21,19 @@ export class RecordsController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async getAllRecordsController(@Request() req) {
+  async getAllRecordsController(
+    @Request() req,
+    @Query('title') title?: string,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
     const userId: number = req?.user?.id as number;
-    return await this.recordsService.getAllRecordsService(userId);
+    return await this.recordsService.getAllRecordsService(
+      userId,
+      title,
+      limit,
+      offset,
+    );
   }
 
   @UseGuards(AuthGuard)
