@@ -24,7 +24,7 @@ export class RecordsService {
   async getAllRecordsService(
     userId: number,
     title?: string,
-    limit: number = 2,
+    limit: number = 10,
     offset: number = 0,
   ) {
     const [data, totalItems] = await this.recordsRepository.findAndCount({
