@@ -17,11 +17,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.enableCors({
-    origin: [
-      'http://localhost:5000',
-      // 'https://yourapp.com',
-      // 'https://staging.yourapp.com',
-    ], // Allows all domains
+    origin: ['http://localhost:5000', 'https://online-diary-ruby.vercel.app'], // Allows all domains
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Allows all common methods
     allowedHeaders: 'Content-Type, Accept, Authorization', // Allows common headers
     credentials: true, // Allows cookies, authorization headers, etc.

@@ -1,17 +1,10 @@
-import { AuthGuard } from 'src/auth/auth.guard';
-import { LoginDTO } from '../auth/dto/login-dto';
+import { AuthGuard } from '../auth/auth.guard';
 import { SignUpDTO } from './dto/signup-dto';
-import { UpdateUserDTO } from './dto/update-user-dto';
 import { UsersService } from './users.service';
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  HttpException,
-  HttpStatus,
-  Param,
-  Patch,
   Post,
   UseGuards,
   Request,

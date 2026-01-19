@@ -11,7 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { RecordsService } from './records.service';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 import { CreateRecordDTO } from './dto/create-record-dto';
 import { UpdateRecordDTO } from './dto/update-record-dto';
 

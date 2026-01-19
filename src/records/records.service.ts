@@ -11,7 +11,7 @@ import { UpdateRecordDTO } from './dto/update-record-dto';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { AiAnalysisService } from '../ai-analysis/ai-analysis.service';
-import { parseJsonResponse } from 'src/utils/json-parser';
+import { parseJsonResponse } from '../utils/json-parser';
 
 @Injectable()
 export class RecordsService {

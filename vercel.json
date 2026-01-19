@@ -9,11 +9,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/main.ts",
-      "headers": {
-        "Access-Control-Allow-Origin": "*"
-      }
+      "dest": "src/main.ts"
     }
-  ],
-  "outputDirectory": "dist"
+  ]
 }

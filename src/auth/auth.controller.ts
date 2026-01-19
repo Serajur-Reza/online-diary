@@ -2,7 +2,7 @@
 import { Body, Controller, Post, Patch, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
-import { LoginDTO } from 'src/auth/dto/login-dto';
+import { LoginDTO } from './dto/login-dto';
 import { ChangePasswordDTO } from './dto/change-password';
 
 @Controller('auth')

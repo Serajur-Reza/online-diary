@@ -1,4 +1,4 @@
-import { AiAnalysis } from 'src/ai-analysis/ai-analysis.entity';
+import { AiAnalysis } from '../ai-analysis/ai-analysis.entity';
 import { User } from 'src/users/users.entity';
 import {
   Entity,

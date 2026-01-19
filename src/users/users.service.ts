@@ -4,7 +4,7 @@ import { SignUpDTO } from './dto/signup-dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
-import { hashPassword } from 'src/utils/passwordUtils';
+import { hashPassword } from '../utils/passwordUtils';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
