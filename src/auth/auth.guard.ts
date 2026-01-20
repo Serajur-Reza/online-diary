@@ -8,10 +8,14 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { User } from '../users/users.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
+    @InjectRepository(User) private usersRepository: Repository<User>,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -80,6 +84,15 @@ export class AuthGuard implements CanActivate {
       //   throw new Error('You are unauthorized');
       // }
       // Attach the user payload to the request object
+
+      const user = await this.usersRepository.findOneBy({
+        email: payload?.email,
+      });
+
+      if (!user) {
+        throw new UnauthorizedException('This user does not exist');
+      }
+
       request['user'] = payload;
     } catch (error) {
       if (error?.name === 'TokenExpiredError') {
