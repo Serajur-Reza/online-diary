@@ -1,5 +1,7 @@
-Online Diary Application
+# Online Diary Application
 Build forms without coding for your react application. Just drag and drop a field to create a form for your react application.
+
+Technologies - Next.js, TypeScript, PostgreSQL, Nest.js ,Gemini Ai
 
 live - https://online-diary-ruby.vercel.app/
 
